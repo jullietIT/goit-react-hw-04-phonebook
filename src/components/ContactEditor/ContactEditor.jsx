@@ -1,29 +1,21 @@
-import { render } from '@testing-library/react';
-import React, { Component } from 'react';
+import { useState } from 'react';
 
-class ContactEditor extends Component {
-  state = {
-    name: '',
-  };
-  handleChange = event => {
-    this.setState({ name: event.currentTarget.value });
-  };
-  handleSubmit = event => {
-    event.preventDefolt();
-    console.log(this.state);
+export default function ContactEditor() {
+  const [name, setNames] = useState([]);
+  // const [filter, setFilters] = useState('');
+
+  const handleChange = event => {
+    setNames(event.currentTarget.value.toLowerCase);
   };
 
-  render() {
-    return (
-      <form onSubmit={this.handleSubmit}>
-        <textarea
-          value={this.state.name}
-          onChange={this.handleChange}
-        ></textarea>
-        <button tupe="submit">Coздать</button>
-      </form>
-    );
-  }
+  const handleSubmit = event => {
+    setNames(event.preventDefolt());
+  };
+  return (
+    <form onSubmit={handleSubmit}>
+      <textarea value={name} onChange={handleChange}></textarea>
+
+      <button tupe="submit">Coздать</button>
+    </form>
+  );
 }
-
-export default ContactEditor;
