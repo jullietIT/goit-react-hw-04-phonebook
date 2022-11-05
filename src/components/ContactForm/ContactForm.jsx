@@ -1,31 +1,54 @@
 // import React, { Component } from 'react';
-import { useState } from 'react';
-
+import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { WrapperForm, Label, Input, Button } from './ContactForm.styled';
 
-export default function ContactForm(addContact) {
-  const [name, setNames] = useState('');
-  const [number, setNumbers] = useState('');
+const useLocalStorage = (key, defaultValue) => {
+  const [state, setState] = useState(() => {
+    return JSON.parse(window.localStorage.getItem(key)) ?? defaultValue;
+  });
 
-  const handleChange = ({ currentTarget: { name, value } }) => {
+  useEffect(() => {
+    window.localStorage.setItem(key, JSON.stringify(state));
+  }, [key, state]);
+  return [state, setState];
+};
+
+export const ContactForm = ({ onSubmit }) => {
+  // const [name, setName] = useState('');
+  // const [number, setNumber] = useState('');
+
+  const [name, setName] = useLocalStorage('name', '');
+  const [number, setNumber] = useLocalStorage('number,', '');
+
+  const handleChange = e => {
+    // console.log(e.target.name);
+    // setName(e.target.value);
+    const { name, value } = e.currentTarget;
+
     switch (name) {
       case 'name':
-        setNames(value);
+        setName(value);
         break;
 
       case 'number':
-        setNumbers(value);
+        setNumber(value);
         break;
       default:
-        return;
+        break;
     }
   };
 
   const handleSubmit = e => {
     e.preventDefault();
-    addContact(name, number);
-    setNames('');
-    setNumbers('');
+
+    onSubmit(name, number);
+    reset();
+  };
+
+  const reset = () => {
+    setName('');
+    setNumber('');
   };
 
   return (
@@ -34,12 +57,12 @@ export default function ContactForm(addContact) {
         <Label>
           Name
           <Input
-            type="name"
+            type="text"
             name="name"
             value={name}
             onChange={handleChange}
             pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-            title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
+            title="Имя должно состоять из букв, заглавных"
             required
           />
         </Label>
@@ -59,4 +82,8 @@ export default function ContactForm(addContact) {
       </form>
     </WrapperForm>
   );
-}
+};
+
+ContactForm.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+};

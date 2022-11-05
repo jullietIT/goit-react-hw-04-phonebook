@@ -1,6 +1,6 @@
 // import React, { Component } from 'react';
 import { useState } from 'react';
-import ContactForm from './ContactForm/ContactForm';
+import { ContactForm } from './ContactForm/ContactForm';
 import ContactList from './ContactList/ContactList';
 import initialContacts from './ContactList/initialContacts.json';
 import Filter from './Filter/Filter';
@@ -16,32 +16,36 @@ export default function App() {
 
   const [filter, setFilter] = useState('');
 
-  const addContact = (name, number) => {
-    contacts.every(contact => contact.name.toLowerCase() !== name.toLowerCase())
-      ? setContacts([...contacts, { name, number, id: nanoid() }])
-      : alert(`${name} is alredy in contacts`);
+  const checkContactsName = (contacts, newContactname) => {
+    const normalizedName = newContactname.toLowerCase();
+    return contacts.some(({ name }) => normalizedName === name.toLowerCase());
   };
+
+  const addContact = (name, number) => {
+    if (checkContactsName(contacts, name)) {
+      alert(`${name} is already in contacts.`);
+      return;
+    }
+
+    const contact = {
+      id: nanoid(),
+      name,
+      number,
+    };
+
+    setContacts(prevContacts => [contact, ...prevContacts]);
+  };
+  const visibleContacts = contacts.filter(contact =>
+    contact.name.toLowerCase().includes(filter.toLowerCase())
+  );
 
   const changeFilter = e => {
     setFilter(e.currentTarget.value);
   };
 
-  const getVisibleContacts = () => {
-    const normalizeFilter = filter.toLowerCase();
-    return contacts.filter(contact =>
-      contact.name.toLowerCase().includes(normalizeFilter)
-    );
-  };
-
   const deleteContact = id => {
     setContacts(contacts.filter(contact => contact.id !== id));
   };
-
-  // const formSubmitHandler = data => {
-  //   console.log(data);
-  // };
-
-  const visibleContacts = getVisibleContacts();
 
   return (
     <>
