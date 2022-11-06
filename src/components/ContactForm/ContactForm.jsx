@@ -1,25 +1,26 @@
 // import React, { Component } from 'react';
-import { useState, useEffect } from 'react';
+// import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { WrapperForm, Label, Input, Button } from './ContactForm.styled';
 
-const useLocalStorage = (key, defaultValue) => {
-  const [state, setState] = useState(() => {
-    return JSON.parse(window.localStorage.getItem(key)) ?? defaultValue;
-  });
+// const useLocalStorage = (key, defaultValue) => {
+//   const [state, setState] = useState(() => {
+//     return JSON.parse(window.localStorage.getItem(key)) ?? defaultValue;
+//   });
 
-  useEffect(() => {
-    window.localStorage.setItem(key, JSON.stringify(state));
-  }, [key, state]);
-  return [state, setState];
-};
+//   useEffect(() => {
+//     window.localStorage.setItem(key, JSON.stringify(state));
+//   }, [key, state]);
+//   return [state, setState];
+// };
 
 export const ContactForm = ({ onSubmit }) => {
-  // const [name, setName] = useState('');
-  // const [number, setNumber] = useState('');
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
 
-  const [name, setName] = useLocalStorage('name', '');
-  const [number, setNumber] = useLocalStorage('number,', '');
+  // const [name, setName] = useLocalStorage('name', '');
+  // const [number, setNumber] = useLocalStorage('number,', '');
 
   const handleChange = e => {
     // console.log(e.target.name);

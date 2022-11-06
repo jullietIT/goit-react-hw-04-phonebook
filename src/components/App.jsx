@@ -1,20 +1,21 @@
 // import React, { Component } from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ContactForm } from './ContactForm/ContactForm';
 import ContactList from './ContactList/ContactList';
-import initialContacts from './ContactList/initialContacts.json';
+// import initialContacts from './ContactList/initialContacts.json';
 import Filter from './Filter/Filter';
 import { nanoid } from 'nanoid';
 import { Wrapper, Title, Title2, Title3 } from './App.styled';
 
 export default function App() {
+  const [filter, setFilter] = useState('');
   const [contacts, setContacts] = useState(() => {
-    return (
-      JSON.parse(window.localStorage.getItem('contacts')) ?? initialContacts
-    );
+    return JSON.parse(window.localStorage.getItem('contacts')) ?? [];
   });
 
-  const [filter, setFilter] = useState('');
+  useEffect(() => {
+    window.localStorage.setItem('contacts', JSON.stringify(contacts));
+  }, [contacts]);
 
   const checkContactsName = (contacts, newContactname) => {
     const normalizedName = newContactname.toLowerCase();
@@ -46,6 +47,33 @@ export default function App() {
   const deleteContact = id => {
     setContacts(contacts.filter(contact => contact.id !== id));
   };
+
+  // //!!< МЕТОД СОХРАНЕНИЯ в localStorage >
+
+  // componentDidMount() {
+  //   console.log('App componentDidMount');
+
+  //   const contacts = localStorage.getItem('contacts');
+  //   const parseContacts = JSON.parse(contacts);
+
+  //   console.log(parseContacts);
+  //   if (parseContacts) {
+  //     this.setState({ contacts: parseContacts });
+  //   }
+  // }
+
+  // componentDidUpdate(prevProps, prevState) {
+  //   console.log('App componentDidUpdate');
+  //   if (this.state.contacts !== prevState.contacts) {
+  //     console.log('обновилось  поле contacts');
+
+  //     //   console.log(prevState);
+  //     // console.log(this.state);
+
+  //     localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+  //   }
+  // }
+  // //!!<>
 
   return (
     <>
